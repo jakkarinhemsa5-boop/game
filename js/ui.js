@@ -1,6 +1,6 @@
 /**
  * UI & HUD Controller for "Needle in the Ocean"
- * (จัดการหน้าจอ HUD, ระบบ 100 ด่านพร้อม Sector Navigation, และระบบเลือกระดับความยาก)
+ * (จัดการหน้าจอ HUD, ระบบ 100 ด่าน, ระบบคู่มือวิธีการเล่น และระบบเลือกระดับความยาก)
  */
 
 class UIManager {
@@ -28,10 +28,15 @@ class UIManager {
     this.btnAudio = document.getElementById('btn-audio-toggle');
     this.audioIcon = document.getElementById('audio-icon');
     this.btnHelp = document.getElementById('btn-help-toggle');
+    this.btnOpenGuideMenu = document.getElementById('btn-open-guide-menu');
     this.btnFullscreen = document.getElementById('btn-fullscreen');
 
     // Modals
     this.modalStart = document.getElementById('modal-start');
+    this.modalGuide = document.getElementById('modal-guide');
+    this.btnCloseGuide = document.getElementById('btn-close-guide');
+    this.btnGuideConfirm = document.getElementById('btn-guide-confirm');
+
     this.modalClear = document.getElementById('modal-clear');
     this.modalGameOver = document.getElementById('modal-gameover');
     this.levelNextWarning = document.getElementById('level-next-warning');
@@ -80,6 +85,7 @@ class UIManager {
     this.activeSectorId = 1;
 
     this.setupButtonEvents();
+    this.setupGuideEvents();
   }
 
   setupButtonEvents() {
@@ -89,7 +95,6 @@ class UIManager {
 
     if (this.btnMenu) this.btnMenu.addEventListener('click', toggleMenu);
     if (this.btnOpenMenu) this.btnOpenMenu.addEventListener('click', toggleMenu);
-    if (this.btnHelp) this.btnHelp.addEventListener('click', toggleMenu);
 
     if (this.btnFullscreen) {
       this.btnFullscreen.addEventListener('click', () => {
@@ -100,6 +105,28 @@ class UIManager {
         }
       });
     }
+  }
+
+  // Setup How To Play Guide Event Handlers
+  setupGuideEvents() {
+    const openGuide = (e) => {
+      if (e) e.stopPropagation();
+      if (this.modalGuide) {
+        this.modalGuide.classList.add('active');
+      }
+    };
+
+    const closeGuide = (e) => {
+      if (e) e.stopPropagation();
+      if (this.modalGuide) {
+        this.modalGuide.classList.remove('active');
+      }
+    };
+
+    if (this.btnHelp) this.btnHelp.addEventListener('click', openGuide);
+    if (this.btnOpenGuideMenu) this.btnOpenGuideMenu.addEventListener('click', openGuide);
+    if (this.btnCloseGuide) this.btnCloseGuide.addEventListener('click', closeGuide);
+    if (this.btnGuideConfirm) this.btnGuideConfirm.addEventListener('click', closeGuide);
   }
 
   setupDifficultyEvents(onSelectDifficulty) {
@@ -129,13 +156,10 @@ class UIManager {
     const progress = Math.min(1.0, (level - 1) / 99);
 
     if (difficulty === 'casual') {
-      // 1 to 5 needles
       return Math.min(5, Math.floor(1 + progress * 4));
     } else if (difficulty === 'abyssal') {
-      // 3 to 14 needles
       return Math.min(14, Math.floor(3 + progress * 11));
     } else {
-      // Normal: 2 to 8 needles
       return Math.min(8, Math.floor(2 + progress * 6));
     }
   }
@@ -151,7 +175,6 @@ class UIManager {
     }
   }
 
-  // Render Sector Tabs and 100-Stage Grid
   renderSectorAndGrid(unlockedLevel, selectedLevel, difficulty, onSelectCallback) {
     this.activeSectorId = Math.min(10, Math.max(1, Math.floor((selectedLevel - 1) / 10) + 1));
     this.renderSectorTabs(unlockedLevel, selectedLevel, difficulty, onSelectCallback);
@@ -198,7 +221,6 @@ class UIManager {
       this.sectorTabsContainer.appendChild(tab);
     });
 
-    // Sector Prev / Next Buttons
     if (this.btnSectorPrev) {
       this.btnSectorPrev.onclick = () => {
         if (this.activeSectorId > 1) {
@@ -282,7 +304,6 @@ class UIManager {
     this.updateDossier(selectedLevel, difficulty);
   }
 
-  // Update Selected Stage Briefing Dossier
   updateDossier(level, difficulty) {
     const stage = this.stageDatabase.find(s => s.level === level) || this.stageDatabase[0];
     const needleCount = this.getNeedleCount(stage.level, difficulty || 'normal');
@@ -360,11 +381,14 @@ class UIManager {
 
   showModal(name, data = {}) {
     this.modalStart.classList.remove('active');
+    if (this.modalGuide) this.modalGuide.classList.remove('active');
     this.modalClear.classList.remove('active');
     this.modalGameOver.classList.remove('active');
 
     if (name === 'start') {
       this.modalStart.classList.add('active');
+    } else if (name === 'guide') {
+      if (this.modalGuide) this.modalGuide.classList.add('active');
     } else if (name === 'clear') {
       this.statTime.innerText = data.timeString || '00:00';
       this.statO2.innerText = `+${data.bonus || 0} PTS`;
@@ -394,6 +418,7 @@ class UIManager {
 
   hideAllModals() {
     this.modalStart.classList.remove('active');
+    if (this.modalGuide) this.modalGuide.classList.remove('active');
     this.modalClear.classList.remove('active');
     this.modalGameOver.classList.remove('active');
   }
