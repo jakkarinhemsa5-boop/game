@@ -254,6 +254,19 @@ body, html {
   transform: translateY(-2px);
 }
 
+.icon-btn.highlight-guide-btn {
+  background: rgba(255, 183, 3, 0.16);
+  border-color: var(--energy-yellow);
+  color: var(--energy-yellow);
+  box-shadow: 0 0 10px rgba(255, 183, 3, 0.25);
+}
+
+.icon-btn.highlight-guide-btn:hover {
+  background: var(--energy-yellow);
+  color: #020c1b;
+  box-shadow: 0 0 18px var(--energy-yellow);
+}
+
 /* ==================== Main Viewport Area ==================== */
 #viewport-container {
   flex: 1;
@@ -617,7 +630,7 @@ body, html {
   gap: 6px;
 }
 
-/* ==================== Modals & Ultra-Modern 100-Stage Menu ==================== */
+/* ==================== Modals ==================== */
 .modal-overlay {
   position: absolute;
   top: 0;
@@ -653,7 +666,7 @@ body, html {
   color: #e0f2fe;
 }
 
-/* Redesigned 100-Stage Fullscreen Expedition Deck */
+/* 100-Stage Fullscreen Deck */
 .main-game-menu-card {
   max-width: 920px;
   width: 96%;
@@ -668,7 +681,6 @@ body, html {
   overflow-y: auto;
 }
 
-/* Corner Sci-Fi Accents */
 .main-game-menu-card::before {
   content: '';
   position: absolute;
@@ -726,7 +738,32 @@ body, html {
 
 .career-stats-pills {
   display: flex;
+  align-items: center;
   gap: 8px;
+}
+
+.guide-trigger-btn {
+  background: linear-gradient(135deg, rgba(255, 183, 3, 0.25), rgba(255, 183, 3, 0.1));
+  border: 1.5px solid var(--energy-yellow);
+  color: var(--energy-yellow);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 0 12px rgba(255, 183, 3, 0.3);
+  transition: all 0.2s;
+}
+
+.guide-trigger-btn:hover {
+  background: var(--energy-yellow);
+  color: #020c1b;
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px var(--energy-yellow);
 }
 
 .stat-pill {
@@ -1119,7 +1156,7 @@ body, html {
   color: #fecdd3;
 }
 
-/* Prominent Launch Action Button */
+/* Action Button */
 .menu-action-row {
   display: flex;
   justify-content: center;
@@ -1175,6 +1212,212 @@ body, html {
   background: rgba(0, 240, 255, 0.25);
   color: #fff;
   box-shadow: 0 0 15px var(--glow-cyan);
+}
+
+/* ==================== Guide / How To Play Modal Styles ==================== */
+.guide-modal-card {
+  max-width: 860px;
+  width: 95%;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 26px;
+  text-align: left;
+  gap: 14px;
+}
+
+.guide-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.25);
+  padding-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.guide-header-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.guide-icon-badge {
+  font-size: 26px;
+}
+
+.close-guide-btn {
+  background: rgba(255, 0, 85, 0.15);
+  border: 1px solid var(--danger-red);
+  color: var(--danger-red);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.close-guide-btn:hover {
+  background: var(--danger-red);
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+.guide-content-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.guide-card {
+  background: rgba(4, 20, 40, 0.75);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.guide-card.highlight-card {
+  border-color: var(--primary-cyan);
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.12), rgba(4, 20, 40, 0.85));
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.12);
+}
+
+.guide-card-icon {
+  font-size: 24px;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: 8px;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.guide-card-body {
+  flex: 1;
+}
+
+.guide-card-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.guide-card-desc {
+  font-size: 13px;
+  color: #b0d2f0;
+  line-height: 1.5;
+}
+
+.guide-card-desc b {
+  color: #ffffff;
+}
+
+/* Controls Grid */
+.controls-comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.control-col {
+  background: rgba(2, 12, 26, 0.8);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.control-col-header {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary-cyan);
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+  padding-bottom: 4px;
+}
+
+.guide-key-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: #cce7ff;
+}
+
+.key-badge {
+  display: inline-block;
+  background: rgba(0, 240, 255, 0.15);
+  border: 1px solid var(--primary-cyan);
+  color: #ffffff;
+  font-family: 'Orbitron', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  box-shadow: 0 0 6px rgba(0, 240, 255, 0.3);
+}
+
+/* Target vs Decoy Grid */
+.target-comparison-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.target-box {
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.target-box.correct-box {
+  background: rgba(0, 255, 170, 0.08);
+  border: 1.5px solid rgba(0, 255, 170, 0.45);
+  color: #d1fae5;
+}
+
+.target-box.wrong-box {
+  background: rgba(255, 0, 85, 0.08);
+  border: 1.5px solid rgba(255, 0, 85, 0.4);
+  color: #fecdd3;
+}
+
+.target-box-tag {
+  font-weight: 800;
+  font-size: 12.5px;
+  margin-bottom: 4px;
+}
+
+.correct-box .target-box-tag {
+  color: var(--safe-green);
+}
+
+.wrong-box .target-box-tag {
+  color: var(--danger-red);
+}
+
+.guide-modal-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 6px;
+  flex-shrink: 0;
 }
 
 .stat-grid {
