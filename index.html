@@ -53,8 +53,8 @@
         <button class="icon-btn" id="btn-audio-toggle" title="เปิด/ปิดเสียง">
           <span id="audio-icon">🔊</span>
         </button>
-        <button class="icon-btn" id="btn-help-toggle" title="ข้อมูลภารกิจ / วิธีเล่น">
-          <span>❓</span>
+        <button class="icon-btn highlight-guide-btn" id="btn-help-toggle" title="คู่มือและวิธีการเล่น (How To Play)">
+          <span>📖</span>
         </button>
         <button class="icon-btn" id="btn-fullscreen" title="โหมดเต็มจอ">
           <span>⛶</span>
@@ -140,12 +140,15 @@
             <div class="modal-subheading">ศูนย์ควบคุมภารกิจสำรวจก้นมหาสมุทร 100 ด่าน (100 Expedition Stages)</div>
           </div>
           <div class="career-stats-pills">
+            <button class="guide-trigger-btn" id="btn-open-guide-menu" title="ดูวิธีการเล่น">
+              <span>📖 วิธีการเล่น</span>
+            </button>
             <div class="stat-pill">
               <span class="stat-pill-label">🏆 HIGH SCORE:</span>
               <span class="stat-pill-val" id="menu-stat-highscore">0</span>
             </div>
             <div class="stat-pill">
-              <span class="stat-pill-label">🧲 TOTAL NEEDLES:</span>
+              <span class="stat-pill-label">🧲 NEEDLES:</span>
               <span class="stat-pill-val" id="menu-stat-needles">0</span>
             </div>
           </div>
@@ -223,6 +226,110 @@
         <div class="menu-action-row">
           <button class="btn-primary" id="btn-start-game">
             <span id="btn-start-label">START MISSION (LEVEL 1)</span> ➔
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== How To Play Guide Modal ==================== -->
+    <div id="modal-guide" class="modal-overlay">
+      <div class="modal-card guide-modal-card">
+        <div class="guide-modal-header">
+          <div class="guide-header-title">
+            <span class="guide-icon-badge">📖</span>
+            <div>
+              <div class="modal-title">วิธีการเล่น (HOW TO PLAY)</div>
+              <div class="modal-subheading">คู่มือการปฏิบัติการสำรวจและเก็บกู้เข็มใต้ทะเลลึก</div>
+            </div>
+          </div>
+          <button class="close-guide-btn" id="btn-close-guide" title="ปิดหน้าต่าง">&times;</button>
+        </div>
+
+        <!-- Guide Steps & Cards Container -->
+        <div class="guide-content-scroll">
+          <!-- Card 1: Mission Goal -->
+          <div class="guide-card highlight-card">
+            <div class="guide-card-icon">🎯</div>
+            <div class="guide-card-body">
+              <div class="guide-card-title">1. เป้าหมายภารกิจ (Mission Objective)</div>
+              <div class="guide-card-desc">
+                คุณคือผู้ควบคุมยานสำรวจโดรนดำน้ำลึก! ในแต่ละด่านจะมี <b>เข็มเย็บผ้าขนาดเล็กที่วางนอนราบอยู่บนผืนทราย ✨</b> 
+                หน้าที่ของคุณคือบังคับยานใช้แสงไฟฉายสปอตไลท์ส่องค้นหา และ <b>เก็บกู้เข็มให้ครบตามจำนวนเป้าหมาย</b> เพื่อเปิดด่านต่อไป
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Controls for PC & Mobile -->
+          <div class="guide-card">
+            <div class="guide-card-icon">🕹️</div>
+            <div class="guide-card-body">
+              <div class="guide-card-title">2. การควบคุมยานสำรวจ (Controls)</div>
+              <div class="controls-comparison-grid">
+                <!-- PC Controls -->
+                <div class="control-col">
+                  <div class="control-col-header">💻 บนคอมพิวเตอร์ (PC / Mac)</div>
+                  <ul class="guide-key-list">
+                    <li><span class="key-badge">W</span> <span class="key-badge">A</span> <span class="key-badge">S</span> <span class="key-badge">D</span> หรือ <span class="key-badge">ลูกศร</span> เคลื่อนที่ 360°</li>
+                    <li><span class="key-badge">Spacebar</span> หรือ <span class="key-badge">คลิกซ้าย</span> สแกน & เก็บกู้เข็ม</li>
+                    <li><span class="key-badge">Shift</span> เปิด/ปิด โหมดเร่งความเร็วเทอร์โบ (Boost)</li>
+                  </ul>
+                </div>
+                <!-- Mobile Controls -->
+                <div class="control-col">
+                  <div class="control-col-header">📱 บนมือถือ / จอสัมผัส (Touch)</div>
+                  <ul class="guide-key-list">
+                    <li><span class="key-badge">🕹️ จอยสติ๊ก</span> แตะค้างแล้วลากเพื่อเคลื่อนที่</li>
+                    <li><span class="key-badge">🧲 SCAN</span> กดเพื่อสแกนและเก็บกู้เข็มเมื่ออยู่ใกล้</li>
+                    <li><span class="key-badge">⚡ BOOST</span> กด 1 ครั้งเพื่อเปิดบูสต์ค้าง (กดอีกครั้งเพื่อปิด)</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Identification & Decoys -->
+          <div class="guide-card">
+            <div class="guide-card-icon">🔍</div>
+            <div class="guide-card-body">
+              <div class="guide-card-title">3. วิธีแยกแยะเข็ม & สิ่งลวงตา (Targets vs Decoys)</div>
+              <div class="target-comparison-row">
+                <div class="target-box correct-box">
+                  <div class="target-box-tag">✅ เป้าหมายจริง (Target Needle)</div>
+                  <div class="target-box-text">
+                    • เข็มเย็บผ้าแท้ขนาดเล็ก <b>วางแนวนอนราบกับทราย</b><br>
+                    • ก้านเข็มมี <b>แสงเรืองรองนีออนสีฟ้า-ขาว ✨</b> และมีรูร้อยด้าย<br>
+                    • เมื่อไฟฉายส่องโดน จะสะท้อนแสงแวววับพร้อมเสียงชาน Chime!
+                  </div>
+                </div>
+                <div class="target-box wrong-box">
+                  <div class="target-box-tag">❌ ขยะลวงตา (Decoys)</div>
+                  <div class="target-box-text">
+                    • ตะปูสนิมสีน้ำตาล, ตะขอเบ็ด, ฝากระป๋องเก่า<br>
+                    • <b>ไม่มีแสงเรืองรองนีออนสีฟ้า</b><br>
+                    • อย่าสแกนผิด! การสแกนพลาดจะถูก <b>หักพลังงาน -15%</b> ทันที
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Environmental Hazards -->
+          <div class="guide-card">
+            <div class="guide-card-icon">🌊</div>
+            <div class="guide-card-body">
+              <div class="guide-card-title">4. ความท้าทายในระดับความลึก (Hazards & Currents)</div>
+              <div class="guide-card-desc">
+                • <b>กระแสน้ำพัดต้าน (Currents):</b> ตั้งแต่ด่าน 3 ขึ้นไป จะมีกระแสน้ำพัดต้าน ให้สังเกตแถบเตือนสีเหลืองด้านบนเพื่อประคองทิศทาง<br>
+                • <b>พลังงานโดรน (Drone Power):</b> สแกนเฉพาะจุดที่มั่นใจเท่านั้น หากพลังงานหมดลงที่ 0% ภารกิจจะล้มเหลว!
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Guide Action Footer -->
+        <div class="guide-modal-footer">
+          <button class="btn-primary" id="btn-guide-confirm">
+            <span>เข้าใจแล้ว เริ่มภารกิจเลย!</span> ➔
           </button>
         </div>
       </div>
