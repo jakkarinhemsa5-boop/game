@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Needle in the Ocean - 100 Deep Sea Abyssal Stages</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+  <div id="game-app">
+    <!-- Modern Cyber Oceanic Top Bar -->
+    <header id="top-bar">
+      <div class="top-left-section">
+        <div class="sub-icon-badge" id="btn-open-menu" style="cursor: pointer;" title="เปิดแผนผัง 100 ด่าน">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#00f0ff" stroke-width="2">
+            <circle cx="12" cy="12" r="9"/>
+            <polygon points="12,7 15,15 12,13 9,15" fill="#00f0ff"/>
+          </svg>
+        </div>
+        <div class="title-group">
+          <div class="sub-category">EXPEDITION COMMAND • 100 DEEP SEA STAGES</div>
+          <div class="main-title">
+            <span>Needle in the Ocean</span>
+            <span class="level-pill" id="hud-level-pill">Level 1</span>
+          </div>
+          <div class="sub-location" id="hud-location">แนวผาระดับ 1 • แนวปะการังทมิฬ • ความลึก -120 ม.</div>
+        </div>
+      </div>
+
+      <!-- Center Energy Gauge & Needle Counter -->
+      <div class="top-center-section">
+        <div class="energy-header">
+          <span class="energy-label">⚡ DRONE POWER</span>
+          <span class="needle-target-pill" id="hud-needle-counter">🪡 เข็ม: 0 / 2 เล่ม</span>
+          <span class="energy-percent" id="hud-energy-text">100%</span>
+        </div>
+        <div class="energy-bar-track">
+          <div class="energy-bar-fill" id="hud-energy-bar"></div>
+        </div>
+      </div>
+
+      <!-- Right Career Score & Action Tools -->
+      <div class="top-right-section">
+        <div class="score-card">
+          <span class="score-label">EXPEDITION SCORE</span>
+          <span class="score-val" id="hud-score">0</span>
+        </div>
+        <button class="icon-btn" id="btn-menu-toggle" title="แผนผัง 100 ด่าน (100 Stage Map)">
+          <span>🗺️</span>
+        </button>
+        <button class="icon-btn" id="btn-audio-toggle" title="เปิด/ปิดเสียง">
+          <span id="audio-icon">🔊</span>
+        </button>
+        <button class="icon-btn" id="btn-help-toggle" title="ข้อมูลภารกิจ / วิธีเล่น">
+          <span>❓</span>
+        </button>
+        <button class="icon-btn" id="btn-fullscreen" title="โหมดเต็มจอ">
+          <span>⛶</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Viewport Play Area -->
+    <div id="viewport-container">
+      <canvas id="webgl-canvas"></canvas>
+
+      <!-- Atmospheric Cyber Overlays -->
+      <div class="vignette-overlay"></div>
+      <div class="scanlines"></div>
+      <div id="screen-flash"></div>
+      <div id="reticle"></div>
+      <div id="inspect-wave" class="inspect-wave"></div>
+
+      <!-- Top-Right Floating Box: Tactical Minimap -->
+      <div id="minimap-panel" class="floating-hud-card top-right-hud">
+        <div class="hud-card-header">
+          <span class="sonar-title-text">🗺️ TACTICAL MAP</span>
+          <span class="sonar-state-badge active" id="minimap-scale">SCALE: 80M</span>
+        </div>
+        <div class="minimap-canvas-box">
+          <canvas id="minimap-canvas" width="180" height="115"></canvas>
+        </div>
+        <div class="minimap-data-row">
+          <span id="minimap-coords">พิกัด: X:0 | Z:0</span>
+          <span id="minimap-explored-text" style="color: var(--primary-cyan);">สำรวจแล้ว: 0%</span>
+        </div>
+      </div>
+
+      <!-- Ocean Current Alert -->
+      <div id="current-warning-panel">
+        <span class="current-arrow-indicator" id="current-arrow">➔</span>
+        <span id="current-text">CURRENT: 1.8 KTS NE</span>
+      </div>
+
+      <!-- On-Screen Virtual Circular Drag Joystick & Action Buttons -->
+      <div id="onscreen-controls">
+        <div class="joystick-wrapper" id="joystick-container">
+          <div class="joystick-base" id="joystick-base">
+            <span class="joystick-arrow arrow-n">▲</span>
+            <span class="joystick-arrow arrow-s">▼</span>
+            <span class="joystick-arrow arrow-w">◀</span>
+            <span class="joystick-arrow arrow-e">▶</span>
+            <div class="joystick-thumb" id="joystick-thumb">
+              <div class="thumb-core"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-btns-container">
+          <button class="action-btn boost-btn" id="btn-ctrl-boost" title="เร่งความเร็ว (Turbo Boost)">
+            <span>⚡ BOOST</span>
+          </button>
+          <button class="action-btn scan-btn" id="btn-ctrl-scan" title="สแกน & เก็บกู้เข็ม (Scan & Grab)">
+            <span>🧲 SCAN / GRAB</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Bottom Status Bar -->
+      <footer id="bottom-bar">
+        <div class="controls-guide">
+          <b>การสำรวจ:</b> บังคับโดรนใช้ไฟฉายส่องค้นหาเข็มด้วยตัวเองบนผืนทราย | <b>ปุ่ม SCAN / Spacebar</b> เพื่อเก็บกู้
+        </div>
+        <div class="warning-pill" id="warning-pill">
+          <span class="pill-icon">🎯</span>
+          <span>คำเตือน: สแกนผิดจุดจะถูกหักพลังงาน -15%!</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Main Game Menu & 100-Stage Select Modal -->
+    <div id="modal-start" class="modal-overlay active">
+      <div class="modal-card main-game-menu-card">
+        <!-- Menu Header -->
+        <div class="menu-header-bar">
+          <div>
+            <div class="modal-title">NEEDLE IN THE OCEAN</div>
+            <div class="modal-subheading">ศูนย์ควบคุมภารกิจสำรวจก้นมหาสมุทร 100 ด่าน (100 Expedition Stages)</div>
+          </div>
+          <div class="career-stats-pills">
+            <div class="stat-pill">
+              <span class="stat-pill-label">🏆 HIGH SCORE:</span>
+              <span class="stat-pill-val" id="menu-stat-highscore">0</span>
+            </div>
+            <div class="stat-pill">
+              <span class="stat-pill-label">🧲 TOTAL NEEDLES:</span>
+              <span class="stat-pill-val" id="menu-stat-needles">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3-Tier Difficulty Selector -->
+        <div class="difficulty-section">
+          <div class="difficulty-title">⚙️ เลือกระดับความยาก (EXPEDITION DIFFICULTY)</div>
+          <div class="difficulty-tabs">
+            <button class="diff-btn" data-diff="casual" id="diff-btn-casual">
+              <span class="diff-name">🟢 CASUAL</span>
+              <span class="diff-desc">สำรวจผ่อนคลาย (1-5 เข็ม)</span>
+            </button>
+            <button class="diff-btn active" data-diff="normal" id="diff-btn-normal">
+              <span class="diff-name">🟡 STANDARD</span>
+              <span class="diff-desc">มาตรฐาน (2-8 เข็ม)</span>
+            </button>
+            <button class="diff-btn" data-diff="abyssal" id="diff-btn-abyssal">
+              <span class="diff-name">🔴 ABYSSAL</span>
+              <span class="diff-desc">มหาอเวจี (3-14 เข็ม + คะแนน x2.5)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 100 Stages Sector Navigator -->
+        <div class="stage-select-section">
+          <div class="section-title-row">
+            <div class="section-title-group">
+              <span class="section-title">🗺️ แผนผัง 100 ด่านความลึก (100 ABYSSAL STAGES)</span>
+              <span class="sector-active-name" id="sector-title-text">ZONE I: แนวปะการังทมิฬ</span>
+            </div>
+            <div class="sector-nav-actions">
+              <button class="nav-arrow-btn" id="btn-sector-prev" title="เขตแดนก่อนหน้า">◀</button>
+              <button class="nav-arrow-btn" id="btn-sector-next" title="เขตแดนถัดไป">▶</button>
+              <button class="quick-jump-btn" id="btn-jump-current">🎯 ด่านล่าสุด</button>
+              <span class="section-progress-text" id="menu-unlocked-progress">ปลดล็อกแล้ว: 1 / 100 ด่าน</span>
+            </div>
+          </div>
+
+          <!-- 10 Sector Fast Tabs -->
+          <div class="sector-tabs-row" id="sector-tabs-container">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- 10 Stages Grid in Active Sector -->
+          <div class="stage-grid" id="stage-grid-container">
+            <!-- Rendered dynamically by JS -->
+          </div>
+        </div>
+
+        <!-- Selected Level Detail & Target Dossier -->
+        <div class="stage-briefing-dossier">
+          <div class="dossier-left">
+            <div class="dossier-tag" id="dossier-level-badge">🎯 ด่านที่เลือก: LEVEL 1</div>
+            <div class="dossier-title" id="dossier-level-name">แนวผาระดับ 1 • แนวปะการังทมิฬ</div>
+            <div class="dossier-details-grid">
+              <div><b>ความลึก:</b> <span id="dossier-depth">-120 M</span></div>
+              <div><b>จำนวนเข็มที่ต้องหา:</b> <span id="dossier-needles-count" style="color: var(--safe-green); font-weight: bold;">2 เล่ม</span></div>
+              <div><b>สิ่งลวงตา:</b> <span id="dossier-decoys">0 ชิ้น (ไม่มี)</span></div>
+              <div><b>กระแสน้ำ:</b> <span id="dossier-current">สงบนิ่ง</span></div>
+            </div>
+          </div>
+
+          <div class="dossier-right">
+            <div class="target-compact-pill correct">
+              <span>🎯 <b>เป้าหมาย:</b> เข็มเย็บผ้าขนาดเล็กแนวนอน ✨ (สังเกตด้วยสายตา)</span>
+            </div>
+            <div class="target-compact-pill decoy">
+              <span>⚠️ <b>ระวัง:</b> ตะปูสนิม ตะขอเบ็ด ขยะโลหะ</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Launch Button Row -->
+        <div class="menu-action-row">
+          <button class="btn-primary" id="btn-start-game">
+            <span id="btn-start-label">START MISSION (LEVEL 1)</span> ➔
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Level Clear Modal -->
+    <div id="modal-clear" class="modal-overlay">
+      <div class="modal-card">
+        <div class="modal-title success">ALL TARGETS RECOVERED!</div>
+        <div class="modal-subtitle">
+          เก็บกู้เข็มเป้าหมายครบทุกเล่มในด่านนี้สำเร็จ!
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="stat-label">TIME TAKEN</div>
+            <div class="stat-val" id="stat-time">00:24</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">ENERGY BONUS</div>
+            <div class="stat-val" id="stat-o2">+500 PTS</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">TOTAL SCORE</div>
+            <div class="stat-val" id="stat-score">1,500</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">NEXT DEPTH</div>
+            <div class="stat-val" id="stat-next-depth">-200 M</div>
+          </div>
+        </div>
+
+        <div id="level-next-warning" class="next-level-tip">
+          ⚠️ ด่านถัดไป: ความมืดเพิ่มขึ้น + ขยะลวงตาเพิ่มขึ้น!
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: center;">
+          <button class="btn-secondary" id="btn-back-to-menu">STAGE MENU 🗺️</button>
+          <button class="btn-primary" id="btn-next-level">DESCEND DEEPER ➔</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="modal-gameover" class="modal-overlay">
+      <div class="modal-card">
+        <div class="modal-title danger">MISSION FAILED</div>
+        <div class="modal-subtitle">
+          พลังงานของโดรนหมดลงจากการสแกนผิดพลาด สัญญาณขาดหายในความมืด
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="stat-label">MAX LEVEL</div>
+            <div class="stat-val" id="stat-gameover-level">LEVEL 1</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">NEEDLES FOUND</div>
+            <div class="stat-val" id="stat-gameover-needles">0</div>
+          </div>
+          <div class="stat-box" style="grid-column: span 2;">
+            <div class="stat-label">FINAL SCORE</div>
+            <div class="stat-val" id="stat-gameover-score" style="color: var(--primary-cyan);">0 PTS</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: center;">
+          <button class="btn-secondary" id="btn-gameover-menu">STAGE MENU 🗺️</button>
+          <button class="btn-primary" id="btn-restart-game">REBOOT DRONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Scripts -->
+  <script src="js/audio.js"></script>
+  <script src="js/stageData.js"></script>
+  <script src="js/objects.js"></script>
+  <script src="js/creatures.js"></script>
+  <script src="js/currents.js"></script>
+  <script src="js/environment.js"></script>
+  <script src="js/drone.js"></script>
+  <script src="js/sonar.js"></script>
+  <script src="js/minimap.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
